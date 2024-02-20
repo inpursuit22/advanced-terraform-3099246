@@ -29,10 +29,10 @@ resource "google_compute_firewall" "default" {
 
   allow {
     protocol = "tcp"
-    ports    = ["80", "8080", "1000-2000", "22"]
+    ports    = var.firewall-ports
   }
 
-  source_tags = ["web"]
+  source_tags = var.compute-source-tags
 }
 
 ### COMPUTE
@@ -40,8 +40,8 @@ resource "google_compute_firewall" "default" {
 resource "google_compute_instance" "nginx_instance" {
   name         = "nginx-proxy"
   machine_type = "f1-micro"
-  tags = ["web"]
-  
+  tags = var.compute-source-tags
+
   boot_disk {
     initialize_params {
       image = "debian-cloud/debian-11"
@@ -52,7 +52,7 @@ resource "google_compute_instance" "nginx_instance" {
     network = data.google_compute_network.default.self_link
     subnetwork = google_compute_subnetwork.subnet-1.self_link
     access_config {
-      
+  
     }
   }
 }
